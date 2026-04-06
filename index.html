@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Automata Scientific Scanner</title>
+
+<style>
+
+/* BACKGROUND */
+body{
+font-family:Arial;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:#eef5fb;
+background-image:
+linear-gradient(rgba(255,255,255,0.9),rgba(255,255,255,0.9)),
+url("https://www.transparenttextures.com/patterns/math.png");
+}
+
+/* CONTAINER */
+.container{
+display:flex;
+width:1150px;
+height:550px;
+background:white;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:25%;
+background:#2c3e50;
+color:white;
+padding:20px;
+}
+
+.sidebar h3{
+border-bottom:2px solid rgba(255,255,255,0.3);
+padding-bottom:8px;
+}
+
+.sidebar p{
+font-size:14px;
+line-height:1.6;
+}
+
+/* SCANNER */
+.scanner{
+width:35%;
+padding:30px;
+text-align:center;
+}
+
+input{
+width:80%;
+padding:12px;
+font-size:18px;
+border:2px solid #5dade2;
+border-radius:6px;
+}
+
+button{
+margin-top:15px;
+padding:12px 25px;
+font-size:16px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2980b9;
+}
+
+.result{
+margin-top:20px;
+font-size:22px;
+font-weight:bold;
+}
+
+/* DFA */
+.dfa{
+width:40%;
+background:#ecf0f1;
+padding:20px;
+}
+
+svg{
+width:100%;
+height:220px;
+}
+
+.state{
+fill:#bdc3c7;
+stroke:#333;
+stroke-width:2;
+}
+
+.active{
+fill:#2ecc71;
+}
+
+text{
+font-size:14px;
+font-weight:bold;
+}
+
+/* LOG */
+.log{
+margin-top:15px;
+background:white;
+padding:10px;
+height:150px;
+overflow:auto;
+border-radius:6px;
+font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- TEORI -->
+<div class="sidebar">
+<h3>Automata Concept</h3>
+
+<p>
+Scanner ini menggunakan konsep 
+<b>DFA (Deterministic Finite Automata)</b>.
+</p>
+
+<p>
+Format:
+<br>
+a × 10ⁿ
+</p>
+
+<p>
+a = bilangan real  
+<br>
+n = integer
+</p>
+
+<p>
+Contoh valid:
+<br>3 x 10^2
+<br>-4.5 x 10^3
+<br>7 x 10^-1
+</p>
+
+</div>
+
+
+<!-- SCANNER -->
+<div class="scanner">
+
+<h2>Scientific Scanner</h2>
+
+<input id="inputNumber">
+
+<br>
+
+<button onclick="scan()">Scan</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+
+<!-- DFA -->
+<div class="dfa">
+
+<h3>DFA Diagram</h3>
+
+<svg>
+
+<!-- garis -->
+<line x1="80" y1="110" x2="160" y2="110" stroke="black"/>
+<line x1="200" y1="110" x2="280" y2="110" stroke="black"/>
+<line x1="320" y1="110" x2="400" y2="110" stroke="black"/>
+<line x1="440" y1="110" x2="520" y2="110" stroke="black"/>
+
+<!-- state -->
+<circle id="q0" class="state" cx="60" cy="110" r="25"/>
+<text x="52" y="115">q0</text>
+
+<circle id="q1" class="state" cx="180" cy="110" r="25"/>
+<text x="172" y="115">q1</text>
+
+<circle id="q2" class="state" cx="300" cy="110" r="25"/>
+<text x="292" y="115">q2</text>
+
+<circle id="q3" class="state" cx="420" cy="110" r="25"/>
+<text x="412" y="115">q3</text>
+
+<circle id="q4" class="state" cx="540" cy="110" r="25"/>
+<text x="532" y="115">q4</text>
+
+</svg>
+
+<h3>Scanner Log</h3>
+
+<div class="log" id="log"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function resetStates(){
+document.querySelectorAll(".state").forEach(s=>{
+s.classList.remove("active")
+})
+}
+
+function activate(id){
+document.getElementById(id).classList.add("active")
+}
+
+function log(text){
+let l=document.getElementById("log")
+l.innerHTML+=text+"<br>"
+l.scrollTop=l.scrollHeight
+}
+
+function scan(){
+
+let input=document.getElementById("inputNumber").value
+let result=document.getElementById("result")
+
+document.getElementById("log").innerHTML=""
+resetStates()
+
+log("Start scanning...")
+activate("q0")
+
+setTimeout(()=>{activate("q1");log("q0 → q1")},500)
+setTimeout(()=>{activate("q2");log("q1 → q2")},1000)
+setTimeout(()=>{activate("q3");log("q2 → q3")},1500)
+setTimeout(()=>{activate("q4");log("q3 → q4")},2000)
+
+setTimeout(()=>{
+
+let pattern=/^[+-]?\d+(\.\d+)?\s?[xX*]\s?10\^[-+]?\d+$/
+
+if(pattern.test(input)){
+result.innerHTML="✔ VALID"
+result.style.color="green"
+log("Result: VALID")
+}else{
+result.innerHTML="✖ INVALID"
+result.style.color="red"
+log("Result: INVALID")
+}
+
+},2500)
+
+}
+
+</script>
+
+</body>
+</html>
